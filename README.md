@@ -1,5 +1,5 @@
 # Hermes 📨
-Hermes is a simple library built with .NET 7.0 and C# that was created in 2023 with the aim of helping developers create Socket Apps, both on Client-Side and Server-Side.
+Hermes is a powerful and user-friendly library crafted with .NET 7.0 and C# to streamline the development of Socket Apps. Born in 2023, its primary mission is to empower developers in building efficient and seamless Client-Side and Server-Side applications. Whether you're looking to establish real-time communication, enhance networking capabilities, or create interactive multiplayer experiences, Hermes has got you covered. By abstracting the complexities of low-level socket programming, Hermes enables developers to focus on crafting robust and feature-rich applications with ease. With its intuitive API and comprehensive documentation, Hermes proves to be an indispensable tool in your development toolkit. Embrace the power of Hermes and revolutionize your Socket App development journey today!
 
 ## How to install
 We do not yet support the C# package manager, NuGet. However, it is possible to use Hermes with .dll! For you to use it, you need to go to the 'releases' section here on github and download the latest version. Another way is downloading the source code and compiling it manually.
