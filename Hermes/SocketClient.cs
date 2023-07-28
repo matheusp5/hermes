@@ -17,10 +17,7 @@ public class SocketClient
         _ = ReceiveMessages();
     }
 
-    public void OnMessage(Action<string> handler)
-    {
-        _onMessageReceived = handler;
-    }
+    public void OnMessage(Action<string> handler) { _onMessageReceived = handler; }
 
     private async Task ReceiveMessages()
     {
