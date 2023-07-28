@@ -7,10 +7,11 @@ namespace Hermes;
 public class SocketServer
 {
     private Socket _serverSocket;
-    private List<Socket> _connectedClients = new List<Socket>();
-    private Action<string, SocketServer> _onMessageReceived;
-    private Action<SocketServer> _onConnection;
-    private Action<SocketServer> _onDisconnect;
+    private List<(int Id, Socket Socket)> _connectedClients = new List<(int, Socket)>();
+    private Action<string, int, SocketServer> _onMessageReceived;
+    private Action<int, SocketServer> _onConnection;
+    private Action<int, SocketServer> _OnDisconnection;
+    private int _nextUserId = 1;
 
     public void CreateConnection(string ip, int port)
     {
@@ -21,19 +22,19 @@ public class SocketServer
         Task.Run(ListenForClients);
     }
 
-    public void OnMessage(Action<string, SocketServer> handler)
+    public void OnMessage(Action<string, int, SocketServer> handler)
     {
         _onMessageReceived = handler;
     }
 
-    public void OnConnection(Action<SocketServer> handler)
+    public void OnConnection(Action<int, SocketServer> handler)
     {
         _onConnection = handler;
     }
 
-    public void OnDisconnect(Action<SocketServer> handler)
+    public void OnDisconnection(Action<int, SocketServer> handler)
     {
-        _onDisconnect = handler;
+        _OnDisconnection = handler;
     }
 
     private async Task ListenForClients()
@@ -41,16 +42,16 @@ public class SocketServer
         while (true)
         {
             var clientSocket = await _serverSocket.AcceptAsync();
-            _connectedClients.Add(clientSocket);
-            Console.WriteLine("New client connected");
+            var userId = _nextUserId++;
+            _connectedClients.Add((userId, clientSocket));
 
-            _onConnection?.Invoke(this);
+            _onConnection?.Invoke(userId, this);
 
-            _ = Task.Run(() => HandleClient(clientSocket));
+            _ = Task.Run(() => HandleClient(userId, clientSocket));
         }
     }
 
-    private async Task HandleClient(Socket clientSocket)
+    private async Task HandleClient(int userId, Socket clientSocket)
     {
         try
         {
@@ -60,7 +61,7 @@ public class SocketServer
                 var bytesRead = await clientSocket.ReceiveAsync(buffer, SocketFlags.None);
                 var data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-                _onMessageReceived?.Invoke(data, this);
+                _onMessageReceived?.Invoke(data, userId, this);
 
                 if (data == "exit")
                 {
@@ -74,10 +75,9 @@ public class SocketServer
         }
         finally
         {
-            _connectedClients.Remove(clientSocket);
+            _connectedClients.RemoveAll(client => client.Id == userId);
 
-            _onDisconnect?.Invoke(this);
-
+            _OnDisconnection?.Invoke(userId, this);
             clientSocket.Shutdown(SocketShutdown.Both);
             clientSocket.Close();
         }
@@ -88,7 +88,7 @@ public class SocketServer
         byte[] buffer = Encoding.ASCII.GetBytes(message);
         foreach (var client in _connectedClients)
         {
-            await client.SendAsync(buffer, SocketFlags.None);
+            await client.Socket.SendAsync(buffer, SocketFlags.None);
         }
     }
 }

@@ -12,7 +12,7 @@ class Program
         server.CreateConnection("127.0.0.1", 12345);
         server.OnMessage(HandleServerMessage);
         server.OnConnection(HandleClientConnection);
-        server.OnDisconnect(HandleClientDisconnect);
+        server.OnDisconnection(HandleClientDisconnect);
 
         var client = new SocketClient();
         client.Connect("127.0.0.1", 12345);
@@ -34,23 +34,23 @@ class Program
         }
     }
 
-    private static void HandleServerMessage(string message, SocketServer server)
+    private static void HandleServerMessage(string message, int userId, SocketServer server)
     {
-        Console.WriteLine("Received from server: " + message);
+        Console.WriteLine($"Message from client, user id: {userId}: {message}");
     }
     
-    private static void HandleClientConnection(SocketServer server)
+    private static void HandleClientConnection(int userId, SocketServer server)
     {
-        Console.WriteLine("New client connected");
+        Console.WriteLine($"New client connected: {userId}");
     }
     
-    private static void HandleClientDisconnect(SocketServer server)
+    private static void HandleClientDisconnect(int userId, SocketServer server)
     {
-        Console.WriteLine("Client disconnected");
+        Console.WriteLine($"Client disconnected: {userId}");
     }
 
     private static void HandleClientMessage(string message)
     {
-        Console.WriteLine("Received from client: " + message);
+        Console.WriteLine("Message from server: " + message);
     }
 }
