@@ -44,7 +44,7 @@ while (true)
 
 Capturing new messages...
 ```csharp
-private static void HandleServerMessage(string message)
+private static void HandleServerMessage(string message, int userId, SocketServer server)
 {
     Console.WriteLine("Received from server: " + message);
 }
