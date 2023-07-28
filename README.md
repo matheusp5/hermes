@@ -3,3 +3,64 @@ Hermes is a powerful and user-friendly library crafted with .NET 7.0 and C# to s
 
 ## How to install
 We do not yet support the C# package manager, NuGet. However, it is possible to use Hermes with .dll! For you to use it, you need to go to the 'releases' section here on github and download the latest version. Another way is downloading the source code and compiling it manually.
+
+After installing our DLL, you need to reference it in your project. It's a simple task and is usually done by the IDE. If you don't want to install the DLL, you can download our source code and reference it with the code below:
+
+```
+dotnet add reference PATH_TO_CSPROJ.csproj
+```
+
+## How to use
+
+First, you need to create the Socket server. In the code below, we are opening a server on port 12345 (with SocketServer) and joining that channel with SocketClient
+
+```csharp
+var server = new SocketServer();
+server.CreateConnection("127.0.0.1", 12345);
+server.OnMessage(HandleServerMessage);
+
+var client = new SocketClient();
+client.Connect("127.0.0.1", 12345);
+client.OnMessage(HandleClientMessage);
+```
+
+Sending messages to server...
+```csharp
+while (true)
+{
+    Thread.Sleep(1000);
+    Console.Write("Enter a message to send from client (type 'exit' to quit): ");
+    var message = Console.ReadLine();
+
+    if (message.ToLower() == "exit")
+    {
+        break;
+    }
+
+    await client.Send(message);
+    await server.SendToAll(message);
+}
+```
+
+Capturing new messages...
+```csharp
+private static void HandleServerMessage(string message)
+{
+    Console.WriteLine("Received from server: " + message);
+}
+
+private static void HandleClientMessage(string message)
+{
+    Console.WriteLine("Received from client: " + message);
+}
+```
+
+## License
+This project is under the MIT License
+
+## Contributing
+You can contribute by opening pull requests if you have any changes to make to the code, or open an issue if you are having a problem.
+
+<hr>
+
+Built with ❤ by Matheus. Could you follow me?
