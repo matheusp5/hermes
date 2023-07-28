@@ -4,12 +4,13 @@ using System.Text;
 
 namespace Hermes;
 
-
 public class SocketServer
 {
     private Socket _serverSocket;
     private List<Socket> _connectedClients = new List<Socket>();
-    private Action<string> _onMessageReceived;
+    private Action<string, SocketServer> _onMessageReceived;
+    private Action<SocketServer> _onConnection;
+    private Action<SocketServer> _onDisconnect;
 
     public void CreateConnection(string ip, int port)
     {
@@ -20,9 +21,19 @@ public class SocketServer
         Task.Run(ListenForClients);
     }
 
-    public void OnMessage(Action<string> handler)
+    public void OnMessage(Action<string, SocketServer> handler)
     {
         _onMessageReceived = handler;
+    }
+
+    public void OnConnection(Action<SocketServer> handler)
+    {
+        _onConnection = handler;
+    }
+
+    public void OnDisconnect(Action<SocketServer> handler)
+    {
+        _onDisconnect = handler;
     }
 
     private async Task ListenForClients()
@@ -32,6 +43,9 @@ public class SocketServer
             var clientSocket = await _serverSocket.AcceptAsync();
             _connectedClients.Add(clientSocket);
             Console.WriteLine("New client connected");
+
+            _onConnection?.Invoke(this);
+
             _ = Task.Run(() => HandleClient(clientSocket));
         }
     }
@@ -46,7 +60,7 @@ public class SocketServer
                 var bytesRead = await clientSocket.ReceiveAsync(buffer, SocketFlags.None);
                 var data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-                _onMessageReceived?.Invoke(data);
+                _onMessageReceived?.Invoke(data, this);
 
                 if (data == "exit")
                 {
@@ -61,6 +75,9 @@ public class SocketServer
         finally
         {
             _connectedClients.Remove(clientSocket);
+
+            _onDisconnect?.Invoke(this);
+
             clientSocket.Shutdown(SocketShutdown.Both);
             clientSocket.Close();
         }
