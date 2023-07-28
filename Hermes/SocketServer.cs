@@ -17,7 +17,6 @@ public class SocketServer
         _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         _serverSocket.Bind(new IPEndPoint(ipAddress, port));
         _serverSocket.Listen(10);
-
         Task.Run(ListenForClients);
     }
 
