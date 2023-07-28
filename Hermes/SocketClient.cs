@@ -14,7 +14,6 @@ public class SocketClient
         var ipAddress = IPAddress.Parse(ip);
         _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         _clientSocket.Connect(new IPEndPoint(ipAddress, port));
-
         _ = ReceiveMessages();
     }
 
@@ -30,15 +29,12 @@ public class SocketClient
             var buffer = new byte[1024];
             var bytesRead = await _clientSocket.ReceiveAsync(buffer, SocketFlags.None);
             var data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-
             _onMessageReceived?.Invoke(data);
-
             if (data == "exit")
             {
                 break;
             }
         }
-
         _clientSocket.Shutdown(SocketShutdown.Both);
         _clientSocket.Close();
     }
