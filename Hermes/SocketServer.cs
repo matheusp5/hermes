@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Hermes;
 
+
 public class SocketServer
 {
     private Socket _serverSocket;
@@ -31,6 +32,7 @@ public class SocketServer
         {
             var clientSocket = await _serverSocket.AcceptAsync();
             _connectedClients.Add(clientSocket);
+            Console.WriteLine("New client connected");
             _ = Task.Run(() => HandleClient(clientSocket));
         }
     }

@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hermes", "Hermes\Hermes.csproj", "{F03B30B2-B6B1-4F4A-8C21-FA99097876F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hermes.Examples", "Hermes.Examples\Hermes.Examples.csproj", "{EF14F499-5AC3-46C1-B783-9BDFA4FE292F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{F03B30B2-B6B1-4F4A-8C21-FA99097876F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F03B30B2-B6B1-4F4A-8C21-FA99097876F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F03B30B2-B6B1-4F4A-8C21-FA99097876F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF14F499-5AC3-46C1-B783-9BDFA4FE292F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF14F499-5AC3-46C1-B783-9BDFA4FE292F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF14F499-5AC3-46C1-B783-9BDFA4FE292F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF14F499-5AC3-46C1-B783-9BDFA4FE292F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
