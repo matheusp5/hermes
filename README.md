@@ -38,7 +38,6 @@ while (true)
     }
 
     await client.Send(message);
-    await server.SendToAll(message);
 }
 ```
 
